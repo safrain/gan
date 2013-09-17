@@ -1,3 +1,4 @@
+package com.github.safrain.gadmin
 /**
  * Spring framework support
  */

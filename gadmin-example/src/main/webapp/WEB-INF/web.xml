@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+
+    <display-name>GAdmin example</display-name>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/application-context.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>GAdminFilter</filter-name>
+        <filter-class>com.github.safrain.gadmin.GAdminFilter</filter-class>
+        <init-param>
+            <param-name>charset</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>GAdminFilter</filter-name>
+        <url-pattern>/gadmin</url-pattern>
+    </filter-mapping>
+
+
+    <!--<servlet>-->
+        <!--<display-name>GAdminFilter</display-name>-->
+        <!--<servlet-name>InfiltratorServlet</servlet-name>-->
+        <!--<servlet-class>com.taobao.geek.infiltrator.web.InfiltratorServlet</servlet-class>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>InfiltratorServlet</servlet-name>-->
+        <!--<url-pattern>/run/*</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+</web-app>

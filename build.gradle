@@ -1,29 +1,46 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'idea'
-
-configurations {
-	provided
+allprojects {
+    apply plugin: 'idea'
 }
 
-idea.module {
-    scopes.PROVIDED.plus += configurations.provided
+subprojects {
+    group = 'com.github.safrain'
+    version = '1.0'
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    configurations {
+        provided
+    }
+
+    idea.module {
+        scopes.PROVIDED.plus += configurations.provided
+    }
+
+    sourceSets {
+        main { compileClasspath += configurations.provided }
+    }
+
+    repositories {
+        mavenCentral()
+    }
 }
 
-sourceSets {
-	main { compileClasspath += configurations.provided }
+project(':gadmin-lib') {
+    dependencies {
+        provided 'javax.servlet:servlet-api:2.5'
+        provided 'org.springframework:spring:2.5.6.SEC03'
+        provided 'org.codehaus.groovy:groovy-all:1.8.7'
+    }
 }
 
-repositories {
-	mavenCentral()
-}
-
-dependencies {
-	provided 'javax.servlet:servlet-api:2.5'
-	provided 'org.springframework:spring:2.5.6.SEC03'
-	provided 'org.codehaus.groovy:groovy-all:1.8.7'
-	testCompile 'org.mortbay.jetty:jetty:6.1.6'
-	testCompile 'junit:junit:4.4'
-	testCompile 'commons-httpclient:commons-httpclient:3.1'
+project(':gadmin-example') {
+    apply plugin: 'war'
+    apply plugin: 'jetty'
+    dependencies {
+        runtime 'javax.servlet:servlet-api:2.5'
+        runtime 'org.springframework:spring:2.5.6.SEC03'
+        runtime 'org.codehaus.groovy:groovy-all:1.8.7'
+        compile project(':gadmin-lib')
+    }
 }
 
