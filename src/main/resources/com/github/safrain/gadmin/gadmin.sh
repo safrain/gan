@@ -24,11 +24,7 @@ if [ ! -z "$path" ];then
 else
         #Help screen
         echo ""
-        echo "   ____    _    _   _    ____ _ _            _   "
-        echo "  / ___|  / \  | \ | |  / ___| (_) ___ _ __ | |_ "
-        echo " | |  _  / _ \ |  \| | | |   | | |/ _ \ '_ \| __|"
-        echo " | |_| |/ ___ \| |\  | | |___| | |  __/ | | | |_ "
-        echo "  \____/_/   \_\_| \_|  \____|_|_|\___|_| |_|\__|"
+        echo " GAdmin bash client"
         echo ""
         echo " Usage: $0 <FILE> [-h HOST]"
         echo ""

@@ -1,0 +1,29 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'idea'
+
+configurations {
+	provided
+}
+
+idea.module {
+    scopes.PROVIDED.plus += configurations.provided
+}
+
+sourceSets {
+	main { compileClasspath += configurations.provided }
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	provided 'javax.servlet:servlet-api:2.5'
+	provided 'org.springframework:spring:2.5.6.SEC03'
+	provided 'org.codehaus.groovy:groovy-all:1.8.7'
+	testCompile 'org.mortbay.jetty:jetty:6.1.6'
+	testCompile 'junit:junit:4.4'
+	testCompile 'commons-httpclient:commons-httpclient:3.1'
+}
+
