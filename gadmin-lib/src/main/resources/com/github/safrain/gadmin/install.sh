@@ -1,4 +1,4 @@
 #! /bin/bash
-curl -s "{{host}}?r=client" -o ./gadmin
+curl -s "{{host}}?client" -o ./gadmin
 chmod +x ./gadmin
 ./gadmin

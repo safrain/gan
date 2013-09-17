@@ -36,10 +36,11 @@ project(':gadmin-lib') {
 project(':gadmin-example') {
     apply plugin: 'war'
     apply plugin: 'jetty'
+    [jettyRun, jettyRunWar].each { it.contextPath = '/' }
     dependencies {
-        runtime 'javax.servlet:servlet-api:2.5'
-        runtime 'org.springframework:spring:2.5.6.SEC03'
-        runtime 'org.codehaus.groovy:groovy-all:1.8.7'
+        compile 'javax.servlet:servlet-api:2.5'
+        compile 'org.springframework:spring:2.5.6.SEC03'
+        compile 'org.codehaus.groovy:groovy-all:1.8.7'
         compile project(':gadmin-lib')
     }
 }

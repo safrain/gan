@@ -18,5 +18,5 @@
           curl -s -X POST "{{host}}" -d <script text>
 
  * Install GAN client
-          curl -s "{{host}}?r=install" | bash
+          curl -s "{{host}}?install" | bash
 

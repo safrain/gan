@@ -6,10 +6,7 @@ import javax.script.ScriptException;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +31,7 @@ import java.util.Map;
  */
 public class GAdminFilter implements Filter {
 	public static final String DEFAULT_CHARSET = "UTF-8";
-	public static final String DEFAULT_RESOURCE_PACKAGE = "com/github/safrain/gadmin/";
+	public static final String DEFAULT_RESOURCE_PACKAGE = "/com/github/safrain/gadmin/";
 
 	/**
 	 * Request & response charset
@@ -143,8 +140,10 @@ public class GAdminFilter implements Filter {
 			engine.put("_request", request);
 			engine.put("_response", response);
 			engine.put("_this", this);
+			engine.put("_engine", engine);
 			try {
 				engine.eval(getScriptBeforeEvaluation());
+				engine.eval(new InputStreamReader(request.getInputStream(), charset));
 			} catch (ScriptException e) {
 				response.setStatus(500);
 				StringWriter sw = new StringWriter();

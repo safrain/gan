@@ -5,15 +5,17 @@ package com.github.safrain.gadmin
 try {
     Class.forName('org.springframework.context.ApplicationContext')
     _context = org.springframework.web.context.support.WebApplicationContextUtils.getWebApplicationContext(_request.session.servletContext)
-    beans = new Object()
+    def beans = new Object()
 
     beans.metaClass.propertyMissing = {
         return _context.getBean(it)
     }
-    beans.list = {
+    beans.metaClass.list = {
         _context.getBeanDefinitionNames().each { println "${it}" }
     }
+    _engine.put('beans', beans)
 
 } catch (ClassNotFoundException e) {
+    println 'Spring support not loaded.'
 }
 
