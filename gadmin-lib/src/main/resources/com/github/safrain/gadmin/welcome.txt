@@ -17,6 +17,6 @@
           	or
           curl -s -X POST "{{host}}" -d <script text>
 
- * Install GAN client
+ * Install Gadmin client
           curl -s "{{host}}?install" | bash
 

@@ -1,12 +1,16 @@
 allprojects {
     apply plugin: 'idea'
+    apply plugin: 'maven'
+    group = 'com.github.safrain'
+    version = '1.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
 }
 
 subprojects {
-    group = 'com.github.safrain'
-    version = '1.0'
     apply plugin: 'java'
-    apply plugin: 'maven'
 
     configurations {
         provided
@@ -19,10 +23,6 @@ subprojects {
     sourceSets {
         main { compileClasspath += configurations.provided }
     }
-
-    repositories {
-        mavenCentral()
-    }
 }
 
 project(':gadmin-lib') {
@@ -31,7 +31,23 @@ project(':gadmin-lib') {
         provided 'org.springframework:spring:2.5.6.SEC03'
         provided 'org.codehaus.groovy:groovy-all:1.8.7'
     }
-}
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: "file://localhost/tmp/myRepo/")
+                pom.project {
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+                }
+            }
+        }
+    }
+                                                                                                                                }
 
 project(':gadmin-example') {
     apply plugin: 'war'
@@ -42,6 +58,23 @@ project(':gadmin-example') {
         compile 'org.springframework:spring:2.5.6.SEC03'
         compile 'org.codehaus.groovy:groovy-all:1.8.7'
         compile project(':gadmin-lib')
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://localhost/tmp/myRepo/")
+            pom.project {
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+            }
+        }
     }
 }
 
