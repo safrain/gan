@@ -1,15 +1,31 @@
 package com.github.safrain.gadmin
+
+import org.springframework.context.ConfigurableApplicationContext
+
 /**
  * Spring framework support
  */
-_context = org.springframework.web.context.support.WebApplicationContextUtils.getWebApplicationContext(_request.session.servletContext)
-def beans = new Object()
+class Beans {
+    ConfigurableApplicationContext context
 
-beans.metaClass.propertyMissing = {
-    return _context.getBean(it)
+    Object get(String name) {
+        context.getBean(name)
+    }
+
+    String toString() {
+        context.getBeanDefinitionNames().inject("""
+Spring application context: ${context}
+Beans defined in this context:
+""") { r, beanName ->
+            def bd = context.getBeanFactory().getBeanDefinition(beanName)
+            r + "${beanName} - [${bd.getBeanClassName()}]\n"
+        }
+    }
+
+    Object propertyMissing = {
+        return context.getBean(it)
+    }
+
 }
-beans.metaClass.list = {
-    _context.getBeanDefinitionNames().each { println "${it}" }
-}
-_engine.put('beans', beans)
+_engine.put('beans', new Beans(context: org.springframework.web.context.support.WebApplicationContextUtils.getWebApplicationContext(_request.session.servletContext)))
 

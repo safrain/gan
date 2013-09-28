@@ -7,8 +7,8 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * GAdmin server side <br>
@@ -37,6 +37,11 @@ public class GAdminFilter implements Filter {
 	 * Request & response charset
 	 */
 	private String charset = DEFAULT_CHARSET;
+
+	/**
+	 * All threads running script through this filter
+	 */
+	public static final Set<RunInfo> runningInfos = Collections.newSetFromMap(new ConcurrentHashMap<RunInfo, Boolean>());
 
 	/**
 	 * Override this method if you want to use some other engine
@@ -84,6 +89,10 @@ public class GAdminFilter implements Filter {
 
 	public static String loadFromClasspath(String path, String charset) {
 		InputStream in = GAdminFilter.class.getClassLoader().getResourceAsStream(path);
+		return toString(in, charset);
+	}
+
+	private static String toString(InputStream in, String charset) {
 		java.util.Scanner s = new java.util.Scanner(in, charset).useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
 	}
@@ -141,14 +150,20 @@ public class GAdminFilter implements Filter {
 			engine.put("_response", response);
 			engine.put("_this", this);
 			engine.put("_engine", engine);
+
+			String script = toString(request.getInputStream(), charset);
+			RunInfo runInfo = new RunInfo(script, request.getRemoteAddr(), System.currentTimeMillis(), Thread.currentThread());
 			try {
+				runningInfos.add(runInfo);
 				engine.eval(getScriptBeforeEvaluation());
-				engine.eval(new InputStreamReader(request.getInputStream(), charset));
+				engine.eval(script);
 			} catch (ScriptException e) {
 				response.setStatus(500);
 				StringWriter sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				writer.write(sw.toString());
+			} finally {
+				runningInfos.remove(runInfo);
 			}
 		} else {
 			throw new UnsupportedOperationException();
@@ -164,6 +179,22 @@ public class GAdminFilter implements Filter {
 
 	public void setCharset(String charset) {
 		this.charset = charset;
+	}
+
+	public static class RunInfo {
+		public final String scriptContent;
+		public final String remoteAddress;
+		public final long startTime;
+		public final Thread thread;
+
+		public RunInfo(String scriptContent, String remoteAddress, long startTime, Thread thread) {
+			this.scriptContent = scriptContent;
+			this.remoteAddress = remoteAddress;
+			this.startTime = startTime;
+			this.thread = thread;
+			//TODO toString
+		}
+
 	}
 
 }
