@@ -13,8 +13,8 @@ pipe="${tmp}/pipe"
 mkfifo $pipe
 
 #Load last success host
-if [ -f ~/.gadmin ];then
-    last_host=`cat ~/.gadmin`
+if [ -f ~/.gadmin_host ];then
+    last_host=`cat ~/.gadmin_host`
     host=$last_host
 fi
 
@@ -65,6 +65,7 @@ if [ -z $action ];then
     #Detect file absence
     if [ ! -f $1 ];then
         echo "File '$1' does not exists."
+        exit 1
     fi
 
     #Confirm
