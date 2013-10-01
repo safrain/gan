@@ -15,14 +15,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * <h2>Supported entries</h2> Assume that requests with URI '/gadmin' will be
  * handled with this filter:
  * <ul>
- * <li><b>GET /gadmin</b> Show welcome screen</li>
- * <li><b>GET /gadmin?install</b> Download shell client install script</li>
- * <li><b>GET /gadmin?client</b> Download shell client</li>
+ * <li><b>GET /gadmin</b> Welcome screen</li>
+ * <li><b>GET /gadmin?client</b> gadmin bash client</li>
+ * <li><b>GET /gadmin?install</b> Client install script</li>
  * <li><b>POST /gadmin</b> Run script in request body on server</li>
  * </ul>
  * <br>
  * <p/>
- * <h2>Init parameters:</h2> Init parameters configured in you web.xml
+ * <h2>Init parameters:</h2>
  * <ul>
  * <li><b>charset</b> Request & response charset</li>
  * </ul>
@@ -36,12 +36,13 @@ public class GAdminFilter implements Filter {
 	/**
 	 * Request & response charset
 	 */
-	private String charset = DEFAULT_CHARSET;
+	private String charset;
 
 	/**
 	 * All threads running script through this filter
 	 */
 	public static final Set<RunInfo> runningInfos = Collections.newSetFromMap(new ConcurrentHashMap<RunInfo, Boolean>());
+
 
 	/**
 	 * Override this method if you want to use some other engine
@@ -55,13 +56,15 @@ public class GAdminFilter implements Filter {
 	}
 
 	/**
-	 * Script returned by this method will be evaluated *BEFORE* the script in request body.
+	 * Scripts returned by this method will be evaluated *BEFORE* the script in request body.
 	 * Some initialization work shall be done in this script, such like put some variable
-	 * or utility methods into the script environment, have a look at <b>init.groovy</b>
-	 * and <b>spring.groovy</b>.
+	 * or utility methods into the script environment, have a look at <b>spring.groovy</b>.
 	 */
-	protected String getScriptBeforeEvaluation() {
-		return loadFromClasspath(DEFAULT_RESOURCE_PACKAGE + "init.groovy", DEFAULT_CHARSET);
+	protected List<String> getScriptBeforeEvaluation() {
+		List<String> scripts = new ArrayList<String>();
+		scripts.add(loadFromClasspath(DEFAULT_RESOURCE_PACKAGE + "utils.groovy", DEFAULT_CHARSET));
+		scripts.add(loadFromClasspath(DEFAULT_RESOURCE_PACKAGE + "spring.groovy", DEFAULT_CHARSET));
+		return scripts;
 	}
 
 	/**
@@ -93,7 +96,7 @@ public class GAdminFilter implements Filter {
 	}
 
 	private static String toString(InputStream in, String charset) {
-		java.util.Scanner s = new java.util.Scanner(in, charset).useDelimiter("\\A");
+		Scanner s = new Scanner(in, charset).useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
 	}
 
@@ -119,6 +122,9 @@ public class GAdminFilter implements Filter {
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		charset = filterConfig.getInitParameter("charset");
+		if (charset == null) {
+			charset = DEFAULT_CHARSET;
+		}
 	}
 
 	@Override
@@ -152,10 +158,12 @@ public class GAdminFilter implements Filter {
 			engine.put("_engine", engine);
 
 			String script = toString(request.getInputStream(), charset);
-			RunInfo runInfo = new RunInfo(script, request.getRemoteAddr(), System.currentTimeMillis(), Thread.currentThread());
+			RunInfo runInfo = new RunInfo(script, request.getRemoteAddr(), new Date(), Thread.currentThread());
 			try {
 				runningInfos.add(runInfo);
-				engine.eval(getScriptBeforeEvaluation());
+				for (String before : getScriptBeforeEvaluation()) {
+					engine.eval(before);
+				}
 				engine.eval(script);
 			} catch (ScriptException e) {
 				response.setStatus(500);
@@ -184,17 +192,28 @@ public class GAdminFilter implements Filter {
 	public static class RunInfo {
 		public final String scriptContent;
 		public final String remoteAddress;
-		public final long startTime;
+		public final Date startTime;
 		public final Thread thread;
+		public final String uuid;
 
-		public RunInfo(String scriptContent, String remoteAddress, long startTime, Thread thread) {
+		public RunInfo(String scriptContent, String remoteAddress, Date startTime, Thread thread) {
 			this.scriptContent = scriptContent;
 			this.remoteAddress = remoteAddress;
 			this.startTime = startTime;
 			this.thread = thread;
-			//TODO toString
+			this.uuid = UUID.randomUUID().toString();
 		}
 
+		@Override
+		public String toString() {
+			return "RunInfo{" +
+					"scriptContent='" + scriptContent + '\'' +
+					", remoteAddress='" + remoteAddress + '\'' +
+					", startTime=" + startTime +
+					", thread=" + thread +
+					", uuid='" + uuid + '\'' +
+					'}';
+		}
 	}
 
 }

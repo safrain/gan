@@ -20,13 +20,19 @@ fi
 
 
 #Detect arguments
-while getopts ":h:" opt; do
+while getopts ":h:lk:" opt; do
     case $opt in
         h)
             host=$OPTARG
             if [ "X${host}" != "X${last_host}" ];then
-            echo $host > ~/.gadmin
+                echo $host > ~/.gadmin_host
             fi
+            ;;
+        l)
+            action="gadmin.running"
+            ;;
+        k)
+            action="gadmin.kill '$OPTARG'"
             ;;
         ##list process
         ##kill process
@@ -48,7 +54,7 @@ if [ -z $host ];then
      echo "Please specify host using -h switch."
 fi
 
-if [ -z $action ];then
+if [ -z "$action" ];then
     #Detect null argument
     if [ -z "$1" ];then
         echo ""
@@ -93,16 +99,18 @@ if [ -z $action ];then
     http_code=`curl -s -N -X POST "${host}" -T $1 -o ${pipe} -w '%{http_code}'`
 else
     #Post predefined command
-    http_code=`curl -s -X POST "${host}" -d '$action' -w '%{http_code}'`
+    cat ${pipe} &
+    http_code=`curl -s -X POST "${host}" -d "${action}" -o ${pipe} -w '%{http_code}'`
 fi
 
 RET=$?
 if [ "X${RET}" != "X0" ];then
-    echo "error"
+    echo -e "\E[1;31mError:\E[0m Error connecting to server."
     exit 1
 fi
 if [ "X${http_code}" != "X200" ];then
-    echo -e "\E[1;33mWarning:\E[0m Server returned http status \E[1m${http_code}\E[0m"
+    echo -e "\E[1;33mWarning:\E[0m Server returned http status \E[1m${http_code}\E[0m."
+else
+    echo -e "\E[1;32mCompleted!\E[0m"
 fi
-echo -e "\E[1;32mCompleted!\E[0m"
 

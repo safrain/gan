@@ -27,5 +27,5 @@ Beans defined in this context:
     }
 
 }
-_engine.put('beans', new Beans(context: org.springframework.web.context.support.WebApplicationContextUtils.getWebApplicationContext(_request.session.servletContext)))
+beans = new Beans(context: org.springframework.web.context.support.WebApplicationContextUtils.getWebApplicationContext(_request.session.servletContext))
 
