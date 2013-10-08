@@ -1,0 +1,19 @@
+  ____                             _       _           _ _   _
+ / ___|_ __ ___   _____   _____   / \   __| |_ __ ___ (_) \ | |
+| |  _| '__/ _ \ / _ \ \ / / _ \ / _ \ / _` | '_ ` _ \| |  \| |
+| |_| | | | (_) | (_) \ V /  __// ___ \ (_| | | | | | | | |\  |
+ \____|_|  \___/ \___/ \_/ \___/_/   \_\__,_|_| |_| |_|_|_| \_|
+
+ Usage:
+ 
+ * Show this screen
+          curl -s "{{host}}"
+
+ * Run script on server
+          curl -s -X POST "{{host}}" -T <local script file>
+          	or
+          curl -s -X POST "{{host}}" -d <script text>
+
+ * Install GrooveAdmiN client
+          curl -s "{{host}}?install" | bash
+

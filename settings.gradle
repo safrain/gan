@@ -1,1 +1,1 @@
-include 'gadmin-lib', 'gadmin-example'
+include 'gan-lib', 'gan-example'

