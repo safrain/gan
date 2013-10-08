@@ -99,7 +99,7 @@ Access built-in variables, and use them just like in Java
 
 *_response* Just the response
 
-*_servlet_context* Just the servletContext
+*\_servlet\_context* Just the servletContext
 
 *_this* GANFilter itself
 
