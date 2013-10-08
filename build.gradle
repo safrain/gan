@@ -25,7 +25,7 @@ subprojects {
     }
 }
 
-project(':gan-lib') {
+project(':gan') {
     dependencies {
         provided 'javax.servlet:servlet-api:2.5'
         provided 'org.springframework:spring:2.5.6.SEC03'
@@ -34,47 +34,44 @@ project(':gan-lib') {
     uploadArchives {
         repositories {
             mavenDeployer {
-                repository(url: "file://localhost/tmp/myRepo/")
+                repository(url: 'file://localhost/tmp/myRepo/')
                 pom.project {
+                    description ''
+                    url  'safrain.github.io/gan/'
                     licenses {
                         license {
-                            name 'The Apache Software License, Version 2.0'
-                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            name 'WTFPL v2'
+                            url 'http://www.wtfpl.net'
                             distribution 'repo'
+                        }
+                    }
+                    scm {
+                        url  'http://safrain.github.io/gan/'
+                        connection  'scm:git:git@github.com:safrain/gan.git'
+                        developerConnection  'scm:git:git@github.com:safrain/gan.git'
+                    }
+                    developers {
+                        developer {
+                            id  'safrain'
+                            name  'safrain'
+                            email  'z.safrain@gmail.com'
                         }
                     }
                 }
             }
         }
     }
-                                                                                                                                }
-
+}
 project(':gan-example') {
     apply plugin: 'war'
     apply plugin: 'jetty'
-    [jettyRun, jettyRunWar].each { it.contextPath = '/' }
+    [jettyRun, jettyRunWar].each {
+        it.contextPath = '/'
+    }
     dependencies {
         compile 'javax.servlet:servlet-api:2.5'
         compile 'org.springframework:spring:2.5.6.SEC03'
         compile 'org.codehaus.groovy:groovy-all:1.8.7'
-        compile project(':gan-lib')
+        compile project(':gan')
     }
 }
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "file://localhost/tmp/myRepo/")
-            pom.project {
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
-                    }
-                }
-            }
-        }
-    }
-}
-

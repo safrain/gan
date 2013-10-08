@@ -1,1 +1,1 @@
-include 'gan-lib', 'gan-example'
+include 'gan', 'gan-example'
