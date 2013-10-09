@@ -6,37 +6,30 @@ hash curl 2>/dev/null || {
     exit 1;
 }
 
-#curl output pipe
-tmp=`mktemp -d`
-trap 'rm -rf "$tmpdir"' EXIT INT TERM HUP
-pipe="${tmp}/pipe"
-mkfifo $pipe
-
 #Load last success host
 if [ -f ~/.gan_host ];then
     last_host=`cat ~/.gan_host`
     host=$last_host
 fi
 
-
 #Detect arguments
 while getopts ":h:lk:" opt; do
     case $opt in
         h)
+            #Change host
             host=$OPTARG
             if [ "X${host}" != "X${last_host}" ];then
                 echo $host > ~/.gan_host
             fi
             ;;
         l)
+            #List tasks
             action="_gan_running()"
             ;;
         k)
+            #Kill task
             action="_gan_kill('$OPTARG')"
             ;;
-        ##list process
-        ##kill process
-        ##
         \?)
             echo "Invalid option: -$OPTARG" >&2
             exit 1
@@ -53,6 +46,12 @@ shift $((OPTIND-1))
 if [ -z $host ];then
      echo "Please specify host using -h switch."
 fi
+
+#Curl output pipe
+tmp=`mktemp -d`
+trap 'rm -rf $tmp' EXIT INT TERM HUP
+pipe="${tmp}/pipe"
+mkfifo $pipe
 
 if [ -z "$action" ];then
     #Detect null argument
@@ -76,6 +75,7 @@ Usage:
         echo "File '$1' does not exists."
         exit 1
     fi
+
 
     #Confirm
     echo -n -e """
@@ -108,11 +108,9 @@ fi
 RET=$?
 if [ "X${RET}" != "X0" ];then
     echo -e "\E[1;31mError:\E[0m Error connecting to server."
-    exit 1
 fi
 if [ "X${http_code}" != "X200" ];then
     echo -e "\E[1;33mWarning:\E[0m Server returned http status \E[1m${http_code}\E[0m."
 else
     echo -e "\E[1;32mCompleted!\E[0m"
 fi
-

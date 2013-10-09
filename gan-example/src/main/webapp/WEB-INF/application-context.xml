@@ -4,5 +4,5 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="test1" class="com.github.safrain.gan.example.TestBean"></bean>
+	<bean id="test1" class="com.github.safrain.gan.example.TestBean" />
 </beans>

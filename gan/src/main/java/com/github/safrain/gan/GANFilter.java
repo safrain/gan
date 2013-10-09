@@ -141,44 +141,48 @@ public class GANFilter implements Filter {
         resp.setCharacterEncoding(charset);
         PrintWriter writer = response.getWriter();
 
-        if ("GET".equals(request.getMethod())) {
-            String content;
-            if (request.getParameter("install") != null) {
-                content = getInstallScript();
-            } else if (request.getParameter("client") != null) {
-                content = getClient();
-            } else {
-                content = getWelcomeScreen();
-            }
-            writer.write(replace(content, getReplacements(request, response)));
-        } else if ("POST".equals(request.getMethod())) {
-            ScriptEngine engine = createScriptEngine();
-            engine.getContext().setWriter(writer);
-            engine.getContext().setErrorWriter(writer);
-            engine.put("_request", request);
-            engine.put("_response", response);
-            engine.put("_servlet_context", filterConfig.getServletContext());
-            engine.put("_this", this);
-            engine.put("_engine", engine);
-
-            String script = toString(request.getInputStream(), charset);
-            RunInfo runInfo = new RunInfo(script, request.getRemoteAddr(), new Date(), Thread.currentThread());
-            try {
-                runningInfos.add(runInfo);
-                for (String before : getScriptBeforeEvaluation()) {
-                    engine.eval(before);
+        try {
+            if ("GET".equals(request.getMethod())) {
+                String content;
+                if (request.getParameter("install") != null) {
+                    content = getInstallScript();
+                } else if (request.getParameter("client") != null) {
+                    content = getClient();
+                } else {
+                    content = getWelcomeScreen();
                 }
-                engine.eval(script);
-            } catch (ScriptException e) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                StringWriter sw = new StringWriter();
-                e.printStackTrace(new PrintWriter(sw));
-                writer.write(sw.toString());
-            } finally {
-                runningInfos.remove(runInfo);
+                writer.write(replace(content, getReplacements(request, response)));
+            } else if ("POST".equals(request.getMethod())) {
+                ScriptEngine engine = createScriptEngine();
+                engine.getContext().setWriter(writer);
+                engine.getContext().setErrorWriter(writer);
+                engine.put("_request", request);
+                engine.put("_response", response);
+                engine.put("_servlet_context", filterConfig.getServletContext());
+                engine.put("_this", this);
+                engine.put("_engine", engine);
+
+                String script = toString(request.getInputStream(), charset);
+                RunInfo runInfo = new RunInfo(script, request.getRemoteAddr(), new Date(), Thread.currentThread());
+                try {
+                    runningInfos.add(runInfo);
+                    for (String before : getScriptBeforeEvaluation()) {
+                        engine.eval(before);
+                    }
+                    engine.eval(script);
+                } catch (ScriptException e) {
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    StringWriter sw = new StringWriter();
+                    e.printStackTrace(new PrintWriter(sw));
+                    writer.write(sw.toString());
+                } finally {
+                    runningInfos.remove(runInfo);
+                }
+            } else {
+                response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
             }
-        } else {
-            response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        } finally {
+            writer.close();
         }
     }
 
