@@ -310,9 +310,9 @@ You can upload a local script file and execute it on server.
 	./gan foo.groovy
 
 #### Specify server address and save it as default server address
-Script will be executed at 'www.server-address.com/gan', and default server address of the client will be changed to 'www.server-address.com/gan'
+Script will be executed at <server address>, and default server address of the client will be changed to <server address>
 
-    ./gan -h www.server-address.com/gan foo.groovy
+    ./gan -h <server address> foo.groovy
 
 ####List running scripts
     
