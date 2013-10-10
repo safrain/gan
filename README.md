@@ -19,7 +19,7 @@ Through GrooveAdmiN, you can do your management work easily with the power of dy
 
 1.Add following jars into you classpath
 
-- [GrooveAdmiN](http://search.maven.org/remotecontent?filepath=com/github/safrain/gan/0.1/gan-0.1.jar)
+- [GrooveAdmiN](https://oss.sonatype.org/service/local/repositories/snapshots/content/com/github/safrain/gan/1.0-SNAPSHOT/gan-1.0-20131010.060527-1.jar)
 - [Groovy Runtime](http://groovy.codehaus.org/Download) Any version greater than 1.8.6 is OK 
 
 For maven projects, add below content into you pom
@@ -27,7 +27,7 @@ For maven projects, add below content into you pom
 	<dependency>
 		<groupId>com.github.safrain</groupId>
 		<artifactId>gan</artifactId>
-		<version>0.1</version>
+		<version>1.0-SNAPSHOT</version>
 	</dependency>
 
 	<dependency>
@@ -202,5 +202,4 @@ Then show the welcome screen, and follow its instructions
 
 ## TODOs
 
-* Auth filter
-* Log filter
+* Support http basic auth and digest auth on bash client

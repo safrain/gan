@@ -1,6 +1,7 @@
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'maven'
+    apply plugin: 'signing'
     group = 'com.github.safrain'
     version = '1.0-SNAPSHOT'
 
@@ -31,13 +32,44 @@ project(':gan') {
         provided 'org.springframework:spring:2.5.6.SEC03'
         provided 'org.codehaus.groovy:groovy-all:1.8.7'
     }
+
+
+
+    signing {
+        sign configurations.archives
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from 'build/docs/javadoc'
+    }
+
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allSource
+        classifier = 'sources'
+    }
+
+    artifacts {
+        archives jar
+        archives javadocJar
+        archives sourcesJar
+    }
+
     uploadArchives {
         repositories {
             mavenDeployer {
-                repository(url: 'file://localhost/tmp/myRepo/')
+                beforeDeployment { signing.signPom(it) }
+
+                repository(url:
+                        version.endsWith('SNAPSHOT') ?
+                            'https://oss.sonatype.org/content/repositories/snapshots/' : 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+                ) {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
+
                 pom.project {
                     description ''
-                    url  'safrain.github.io/gan/'
+                    url 'http://safrain.github.io/gan/'
                     licenses {
                         license {
                             name 'WTFPL v2'
@@ -46,15 +78,15 @@ project(':gan') {
                         }
                     }
                     scm {
-                        url  'http://safrain.github.io/gan/'
-                        connection  'scm:git:git@github.com:safrain/gan.git'
-                        developerConnection  'scm:git:git@github.com:safrain/gan.git'
+                        url 'http://safrain.github.io/gan/'
+                        connection 'scm:git:git@github.com:safrain/gan.git'
+                        developerConnection 'scm:git:git@github.com:safrain/gan.git'
                     }
                     developers {
                         developer {
-                            id  'safrain'
-                            name  'safrain'
-                            email  'z.safrain@gmail.com'
+                            id 'safrain'
+                            name 'safrain'
+                            email 'z.safrain@gmail.com'
                         }
                     }
                 }
