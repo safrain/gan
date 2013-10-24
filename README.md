@@ -116,9 +116,9 @@ GrooveAdmiN 的bash 客户端 'gan' 会被下载到当前目录中，当前的�
 
 #### 指定服务器地址并将其保存为默认地址
 
-脚本会在 www.server-address.com/gan 上被执行, 客户端的默认地址会被修改为 www.server-address.com/gan
+脚本会在 <server address> 上被执行, 客户端的默认地址会被修改为 <server address>
 
-    ./gan -h www.server-address.com/gan foo.groovy
+    ./gan -h <server address> foo.groovy
 
 #### 运行中脚本列表
     
@@ -310,9 +310,9 @@ You can upload a local script file and execute it on server.
 	./gan foo.groovy
 
 #### Specify server address and save it as default server address
-Script will be executed at 'www.server-address.com/gan', and default server address of the client will be changed to 'www.server-address.com/gan'
+Script will be executed at <server address>, and default server address of the client will be changed to <server address>
 
-    ./gan -h www.server-address.com/gan foo.groovy
+    ./gan -h <server address> foo.groovy
 
 ####List running scripts
     
