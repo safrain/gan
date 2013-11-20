@@ -31,7 +31,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class GANFilter implements Filter {
     public static final String DEFAULT_CHARSET = "UTF-8";
-    public static final String DEFAULT_RESOURCE_PACKAGE = "/com/github/safrain/gan/";
 
     /**
      * Request & response charset
@@ -64,8 +63,8 @@ public class GANFilter implements Filter {
      */
     protected List<String> getScriptBeforeEvaluation() {
         List<String> scripts = new ArrayList<String>();
-        scripts.add(loadFromClasspath(DEFAULT_RESOURCE_PACKAGE + "task.groovy", DEFAULT_CHARSET));
-        scripts.add(loadFromClasspath(DEFAULT_RESOURCE_PACKAGE + "spring.groovy", DEFAULT_CHARSET));
+        scripts.add(loadFromClasspath("task.groovy", DEFAULT_CHARSET));
+        scripts.add(loadFromClasspath("spring.groovy", DEFAULT_CHARSET));
         return scripts;
     }
 
@@ -74,7 +73,7 @@ public class GANFilter implements Filter {
      * filter without parameters, just show some tips on the screen.
      */
     protected String getWelcomeScreen() {
-        return loadFromClasspath(DEFAULT_RESOURCE_PACKAGE + "welcome.txt", DEFAULT_CHARSET);
+        return loadFromClasspath("welcome.txt", DEFAULT_CHARSET);
     }
 
     /**
@@ -82,18 +81,18 @@ public class GANFilter implements Filter {
      * gan shell client and add execute permission.
      */
     protected String getInstallScript() {
-        return loadFromClasspath(DEFAULT_RESOURCE_PACKAGE + "install", DEFAULT_CHARSET);
+        return loadFromClasspath("install", DEFAULT_CHARSET);
     }
 
     /**
      * Content return by this method will be stored on user computer, as a client script
      */
     protected String getClient() {
-        return loadFromClasspath(DEFAULT_RESOURCE_PACKAGE + "gan", DEFAULT_CHARSET);
+        return loadFromClasspath("gan", DEFAULT_CHARSET);
     }
 
     public static String loadFromClasspath(String path, String charset) {
-        InputStream in = GANFilter.class.getClassLoader().getResourceAsStream(path);
+        InputStream in = GANFilter.class.getResourceAsStream(path);
         return toString(in, charset);
     }
 
