@@ -170,7 +170,7 @@ public class GANFilter implements Filter {
                     }
                     engine.eval(script);
                 } catch (ScriptException e) {
-                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                     StringWriter sw = new StringWriter();
                     e.printStackTrace(new PrintWriter(sw));
                     writer.write(sw.toString());
@@ -178,7 +178,7 @@ public class GANFilter implements Filter {
                     runningInfos.remove(runInfo);
                 }
             } else {
-                response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
             }
         } finally {
             writer.close();
