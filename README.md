@@ -20,7 +20,7 @@ GrooveAdmiN 是一个简单轻便的Java Web工程管理工具
 
 1.在你的classpath下加入如下依赖
 
-- [GrooveAdmiN](https://oss.sonatype.org/service/local/repositories/snapshots/content/com/github/safrain/gan/1.0-SNAPSHOT/gan-1.0-20131010.060527-1.jar)
+- [GrooveAdmiN](http://search.maven.org/remotecontent?filepath=com/github/safrain/gan/1.0.1/gan-1.0.1.jar)
 - [Groovy Runtime](http://groovy.codehaus.org/Download) 任意高于1.8.6的版本皆可
 
 对于Maven管理的项目，把如下内容加入你的pom中
@@ -215,7 +215,7 @@ Through GrooveAdmiN, you can do your management work easily with the power of dy
 
 1.Add following jars into you classpath
 
-- [GrooveAdmiN](https://oss.sonatype.org/service/local/repositories/snapshots/content/com/github/safrain/gan/1.0-SNAPSHOT/gan-1.0-20131010.060527-1.jar)
+- [GrooveAdmiN](http://search.maven.org/remotecontent?filepath=com/github/safrain/gan/1.0.1/gan-1.0.1.jar)
 - [Groovy Runtime](http://groovy.codehaus.org/Download) Any version greater than 1.8.6 is OK 
 
 For maven projects, add below content into you pom
