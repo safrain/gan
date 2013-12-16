@@ -28,7 +28,7 @@ GrooveAdmiN 是一个简单轻便的Java Web工程管理工具
 	<dependency>
 		<groupId>com.github.safrain</groupId>
 		<artifactId>gan</artifactId>
-		<version>1.0.1</version>
+		<version>1.0.3</version>
 	</dependency>
 
 	<dependency>
@@ -223,7 +223,7 @@ For maven projects, add below content into you pom
 	<dependency>
 		<groupId>com.github.safrain</groupId>
 		<artifactId>gan</artifactId>
-		<version>1.0.1</version>
+		<version>1.0.3</version>
 	</dependency>
 
 	<dependency>
